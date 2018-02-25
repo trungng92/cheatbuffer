@@ -1,6 +1,10 @@
-Cheat Buffer is a plugin that will display help information in the `minibuffer` for you when you activate it.
+`cheatbuffer` is a zsh plugin that displays command help info in the `minibuffer` (the buffer below the prompt that is used by tab completion, reverse history search, etc).
 
-It displays help by taking in the current command typed into the prompt and running a help command (by default it runs the [`cheat` plugin](https://github.com/chrisallenlane/cheat)).
+When you activate `cheatbuffer` (`ctrl + h` by default), it will display help text by:
+
+1. reading the current command typed into the prompt
+1. running a help command (by default it runs the [`cheat` plugin](https://github.com/chrisallenlane/cheat))
+1. displaying the help in the `minibuffer`.
 
 [![asciicast](https://asciinema.org/a/rn0knw2tWsvZvAGQcSHOqDDwL.png)](https://asciinema.org/a/rn0knw2tWsvZvAGQcSHOqDDwL)
 
