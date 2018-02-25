@@ -6,7 +6,7 @@ When you activate `cheatbuffer` (`ctrl + h` by default), it will display help te
 1. running a help command (by default it runs the [`cheat` plugin](https://github.com/chrisallenlane/cheat))
 1. displaying the help in the `minibuffer`.
 
-[![asciicast](https://asciinema.org/a/rn0knw2tWsvZvAGQcSHOqDDwL.png)](https://asciinema.org/a/rn0knw2tWsvZvAGQcSHOqDDwL)
+[![asciicast](https://asciinema.org/a/QRZUuu7AmgXM9RMkHPxS5tG4j.png)](https://asciinema.org/a/QRZUuu7AmgXM9RMkHPxS5tG4j)
 
 # Installation
 
