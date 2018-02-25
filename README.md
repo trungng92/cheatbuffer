@@ -12,9 +12,9 @@ When you activate `cheatbuffer` (`ctrl + h` by default), it will display help te
 
 `brew install cheat`
 
-`git clone $URL "$HOME/.oh-my-zsh/custom/plugins"`
+`git clone https://github.com/trungng92/cheatbuffer.git "$HOME/.oh-my-zsh/custom/plugins"`
 
-Lastly, you need to activate the plugin by adding in the `cheatbuffer` plugin to `~/.zshrc`:
+Lastly, you need to activate the plugin by adding in the `cheatbuffer` plugin to `$HOME/.zshrc`:
 
 ```bash
 plugins=(
