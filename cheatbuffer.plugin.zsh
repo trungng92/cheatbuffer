@@ -14,10 +14,15 @@ cheatbuffer() {
 	# Split $BUFFER into the command and its arguments
 	printf "$BUFFER" | read CMD ARGS
 
-	PAGE=$(cheat $CMD | HEAD -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
-	if [[ $? != 0 ]] ; then
-		zle -M "No help page found"
+	if ! type "$CHEATBUFFER_COMMAND" > /dev/null ; then
+		zle -M "Could not run help command '$CHEATBUFFER_COMMAND'"
 		return 1
+	fi
+
+	PAGE=$($CHEATBUFFER_COMMAND $CMD | HEAD -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
+	if [[ $? != 0 ]] ; then
+		zle -M "No help page found for command '$CMD'"
+		return 2
 	fi
 
 	PAGE_LINES=$(echo "$PAGE" | wc -l)
