@@ -9,6 +9,8 @@ export CHEATBUFFER_COMMAND="${CHEATBUFFER_COMMAND:-cheat}"
 export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
 
 cheatbuffer() {
+	set -o pipefail
+
 	# Split $BUFFER into the command and its arguments
 	printf "$BUFFER" | read CMD ARGS
 
