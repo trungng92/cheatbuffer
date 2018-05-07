@@ -31,7 +31,18 @@ The current list of environment variables are:
 # maximum buffer lines to show
 export CHEATBUFFER_MAX_LINES=20
 # use the cheat command as help
-export CHEATBUFFER_COMMAND='cheat'
+# Note that we _want_ the string literal $CMD (which gets converted to your command internally)
+export CHEATBUFFER_COMMAND='cheat $CMD'
 # key bind to activate cheatbuffer, defaults to ctrl + h
 export CHEATBUFFER_KEY_SEQ='^h'
 ```
+
+# Modifying cheat command to `man`
+
+You can set the minibuffer to show the man page:
+
+```
+export CHEATBUFFER_COMMAND='man $CMD | col -b'
+```
+
+And when you press `ctrl + h`, it will display the man page instead.
