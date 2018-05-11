@@ -13,18 +13,22 @@ export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
 cheatbuffer() {
 	set -o pipefail
 
-	# Split $BUFFER into the command and its arguments
-	printf "$BUFFER" | read CMD ARGS
+	# get the word that the cursor is over
+	CMD="${LBUFFER/* /}${RBUFFER/ */}"
 
-	# Cheat buffer command may be more than one word, but we only care about the first word
-	if ! type $(echo "$CHEATBUFFER_COMMAND" | awk '{print $1;}') > /dev/null ; then
-		zle -M "Could not run help command '$CHEATBUFFER_COMMAND'"
+	# replace the string '$CMD' with the actual value
+	# (I could have used eval, but this makes more sense to me)
+	EVAL_COMMAND=$(echo "$CHEATBUFFER_COMMAND" | sed "s|\$CMD|$CMD|g")
+
+	# Only check the word that the cursor is on (the cheat buffer command can be more than one word)
+	if ! type $(echo "$CMD") > /dev/null ; then
+		zle -M "Could not run help command for '$CMD' in '$EVAL_COMMAND'"
 		return 1
 	fi
 
 	PAGE=$(eval "$CHEATBUFFER_COMMAND | col -b | head -n $CHEATBUFFER_MAX_LINES") 2> /dev/null
 	if [[ $? != 0 ]] ; then
-		zle -M "Could not run command '$CHEATBUFFER_COMMAND $CMD' or no help page found for command '$CMD'"
+		zle -M "Could not run command '$EVAL_COMMAND' or no help page found for command '$CMD'"
 		return 2
 	fi
 
