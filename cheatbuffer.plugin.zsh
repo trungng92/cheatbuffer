@@ -21,12 +21,12 @@ cheatbuffer() {
 	EVAL_COMMAND=$(echo "$CHEATBUFFER_COMMAND" | sed "s|\$CMD|$CMD|g")
 
 	# Only check the word that the cursor is on (the cheat buffer command can be more than one word)
-	if ! type $(echo "$CMD") > /dev/null ; then
-		zle -M "Could not run help command for '$CMD' in '$EVAL_COMMAND'"
+	if ! type "$CMD" > /dev/null ; then
+		zle -M "Could not validate '$CMD' with 'type $CMD'"
 		return 1
 	fi
 
-	PAGE=$(eval "$CHEATBUFFER_COMMAND | col -b | head -n $CHEATBUFFER_MAX_LINES") 2> /dev/null
+	PAGE=$(eval "$EVAL_COMMAND | col -b | head -n $CHEATBUFFER_MAX_LINES") 2> /dev/null
 	if [[ $? != 0 ]] ; then
 		zle -M "Could not run command '$EVAL_COMMAND' or no help page found for command '$CMD'"
 		return 2
