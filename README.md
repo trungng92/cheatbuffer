@@ -6,13 +6,14 @@ When you activate `cheatbuffer` (`ctrl + h` by default), it will display help te
 1. running a help command (by default it runs the [`cheat` plugin](https://github.com/chrisallenlane/cheat))
 1. displaying the help in the `minibuffer`.
 
-[![asciicast](https://asciinema.org/a/Jd49MdRPhu7YFPF89sAsJStZE.png)](https://asciinema.org/a/Jd49MdRPhu7YFPF89sAsJStZE)
+![cheatbuffer demo](cheatbuffer-demo.gif)
+[asciinema link](https://asciinema.org/a/Jd49MdRPhu7YFPF89sAsJStZE)
 
 # Installation
 
 1. `brew install cheat`
 1. `git clone https://github.com/trungng92/cheatbuffer.git "$HOME/.oh-my-zsh/custom/plugins"`
-1. Lastly, you need to activate the plugin by adding in the `cheatbuffer` plugin to `$HOME/.zshrc`:
+1. add the `cheatbuffer` plugin in the plugins list `$HOME/.zshrc`:
 
 ```bash
 plugins=(
