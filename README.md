@@ -2,11 +2,11 @@
 
 When you activate `cheatbuffer` (`ctrl + h` by default), it will display help text by:
 
-1. reading the current command typed into the prompt
+1. reading the current command typed into the prompt (the word under the cursor)
 1. running a help command (by default it runs the [`cheat` plugin](https://github.com/chrisallenlane/cheat))
 1. displaying the help in the `minibuffer`.
 
-[![asciicast](https://asciinema.org/a/QRZUuu7AmgXM9RMkHPxS5tG4j.png)](https://asciinema.org/a/QRZUuu7AmgXM9RMkHPxS5tG4j)
+[![asciicast](https://asciinema.org/a/Jd49MdRPhu7YFPF89sAsJStZE.png)](https://asciinema.org/a/Jd49MdRPhu7YFPF89sAsJStZE)
 
 # Installation
 
