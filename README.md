@@ -10,11 +10,9 @@ When you activate `cheatbuffer` (`ctrl + h` by default), it will display help te
 
 # Installation
 
-`brew install cheat`
-
-`git clone https://github.com/trungng92/cheatbuffer.git "$HOME/.oh-my-zsh/custom/plugins"`
-
-Lastly, you need to activate the plugin by adding in the `cheatbuffer` plugin to `$HOME/.zshrc`:
+1. `brew install cheat`
+1. `git clone https://github.com/trungng92/cheatbuffer.git "$HOME/.oh-my-zsh/custom/plugins"`
+1. Lastly, you need to activate the plugin by adding in the `cheatbuffer` plugin to `$HOME/.zshrc`:
 
 ```bash
 plugins=(
@@ -39,10 +37,10 @@ export CHEATBUFFER_KEY_SEQ='^h'
 
 # Modifying cheat command to `man`
 
-You can set the minibuffer to show the man page:
+You can set the minibuffer to show the `man` page:
 
 ```
-export CHEATBUFFER_COMMAND='man $CMD | col -b'
+export CHEATBUFFER_COMMAND='man $CMD'
 ```
 
-And when you press `ctrl + h`, it will display the man page instead.
+And when you press `ctrl + h` (or whatever `CHEATBUFFER_KEY_SEQ` is set to), it will display the `man` page instead.
