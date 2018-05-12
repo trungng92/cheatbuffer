@@ -13,6 +13,11 @@ export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
 cheatbuffer() {
 	set -o pipefail
 
+	if ! echo "$CHEATBUFFER_COMMAND" | grep -w '$CMD' > /dev/null ; then
+		zle -M "Cheatbuffer command '$CHEATBUFFER_COMMAND' requires literal string for variable '\$CMD'"
+		return 1
+	fi
+
 	# get the word that the cursor is over
 	CMD="${LBUFFER/* /}${RBUFFER/ */}"
 
@@ -23,13 +28,13 @@ cheatbuffer() {
 	# Only check the word that the cursor is on (the cheat buffer command can be more than one word)
 	if ! type "$CMD" > /dev/null ; then
 		zle -M "Could not validate '$CMD' with 'type $CMD'"
-		return 1
+		return 2
 	fi
 
 	PAGE=$(eval "$EVAL_COMMAND | col -b | head -n $CHEATBUFFER_MAX_LINES") 2> /dev/null
 	if [[ $? != 0 ]] ; then
 		zle -M "Could not run command '$EVAL_COMMAND' or no help page found for command '$CMD'"
-		return 2
+		return 3
 	fi
 
 	PAGE_LINES=$(echo "$PAGE" | wc -l)
