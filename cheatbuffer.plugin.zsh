@@ -21,10 +21,8 @@ cheatbuffer() {
 	# get the word that the cursor is over
 	CMD="${LBUFFER/* /}${RBUFFER/ */}"
 
-	# replace the string '$CMD' with the actual value
-	# (I could have used eval, but this makes more sense to me)
-	# Note: there is a bug where this replaces any string '$CMD' instead of word bounded '$CMD's
-	EVAL_COMMAND=$(echo "$CHEATBUFFER_COMMAND" | sed "s|\$CMD|$CMD|g")
+	# eval the cheatbuffer command so that we can evaluate the literal $CMD
+	EVAL_COMMAND=$(eval echo "$CHEATBUFFER_COMMAND")
 
 	# Only check the word that the cursor is on (the cheat buffer command can be more than one word)
 	if ! type "$CMD" > /dev/null ; then
@@ -32,9 +30,9 @@ cheatbuffer() {
 		return 2
 	fi
 
-	PAGE=$(eval "$EVAL_COMMAND | col -b | head -n $CHEATBUFFER_MAX_LINES") 2> /dev/null
+	PAGE=$(eval "$EVAL_COMMAND" | col -b | head -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
 	if [[ $? != 0 ]] ; then
-		zle -M "Could not run command '$EVAL_COMMAND' or no help page found for command '$CMD'"
+		zle -M "Could not run command 'eval \"$EVAL_COMMAND\" | col -b | head -n \"$CHEATBUFFER_MAX_LINES\"' or no help page found for command '$CMD'"
 		return 3
 	fi
 
