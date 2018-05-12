@@ -23,6 +23,7 @@ cheatbuffer() {
 
 	# replace the string '$CMD' with the actual value
 	# (I could have used eval, but this makes more sense to me)
+	# Note: there is a bug where this replaces any string '$CMD' instead of word bounded '$CMD's
 	EVAL_COMMAND=$(echo "$CHEATBUFFER_COMMAND" | sed "s|\$CMD|$CMD|g")
 
 	# Only check the word that the cursor is on (the cheat buffer command can be more than one word)
