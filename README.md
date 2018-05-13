@@ -45,3 +45,7 @@ export CHEATBUFFER_COMMAND='man $CMD'
 ```
 
 And when you press `ctrl + h` (or whatever `CHEATBUFFER_KEY_SEQ` is set to), it will display the `man` page instead.
+
+# More info
+
+You can find documentation on [widgets here](http://zsh.sourceforge.net/Doc/Release/Zsh-Line-Editor.html#Zle-Widgets).
