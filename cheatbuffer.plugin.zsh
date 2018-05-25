@@ -20,6 +20,8 @@ cheatbuffer() {
 
 	# get the word that the cursor is over
 	CMD="${LBUFFER/* /}${RBUFFER/ */}"
+	# If there are any quotes around the command (e.g. 'man) remove them
+	CMD=$(echo "$CMD" | sed 's/^['\''"]*//g; s/['\''"]*$//g')
 
 	# eval the cheatbuffer command so that we can evaluate the literal $CMD
 	EVAL_COMMAND=$(eval echo "$CHEATBUFFER_COMMAND")
