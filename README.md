@@ -19,7 +19,7 @@ When you activate `cheatbuffer` (`ctrl + h` by default), it will display help te
 ## Installing
 
 1. `brew install cheat` (optional, but recommended if you want to use cheatbuffer's default cheat command)
-1. `git clone https://github.com/trungng92/cheatbuffer.git "$HOME/.oh-my-zsh/custom/plugins"`
+1. `git clone https://github.com/trungng92/cheatbuffer.git "$HOME/.oh-my-zsh/custom/plugins/cheatbuffer"`
 1. add the `cheatbuffer` plugin in the plugins list `$HOME/.zshrc`:
 
 ```bash
