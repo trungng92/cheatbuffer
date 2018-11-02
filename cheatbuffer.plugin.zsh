@@ -2,43 +2,46 @@
 
 ## Defaults
 # maximum buffer lines to show
-export CHEATBUFFER_MAX_LINES="${CHEATBUFFER_MAX_LINES:-20}"
-# use the cheat command as help
-# Note that in the default value we have to have a \ to escape the $
-# but when exporting the variable, you don't need to have the \
-export CHEATBUFFER_COMMAND="${CHEATBUFFER_COMMAND:-cheat \$CMD}"
+export CHEATBUFFER_MAX_LINES="${CHEATBUFFER_MAX_LINES:-40}"
 # key bind to activate cheatbuffer, defaults to ctrl + h
 export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
 
 cheatbuffer() {
 	set -o pipefail
 
-	if ! echo "$CHEATBUFFER_COMMAND" | grep -w '$CMD' > /dev/null ; then
-		zle -M "Cheatbuffer command '$CHEATBUFFER_COMMAND' requires literal string for variable '\$CMD'"
-		return 1
-	fi
+	local WORD_ARRAY=($=BUFFER)
 
-	# get the word that the cursor is over
-	CMD="${LBUFFER/* /}${RBUFFER/ */}"
-	# If there are any quotes around the command (e.g. 'man) remove them
-	CMD=$(echo "$CMD" | sed 's/^['\''"]*//g; s/['\''"]*$//g')
+	# get the longest substring that has help
+	local CURRENT_COMMAND=''
+	for i in $(seq `echo ${#WORD_ARRAY[@]}`); do
+		CURRENT_COMMAND=${WORD_ARRAY[@]:0:$i}
+		if ! eval "$CURRENT_COMMAND -h" > /dev/null 2>&1; then
+			break
+		fi
+		local CMD="$CURRENT_COMMAND"
+	done
 
-	# eval the cheatbuffer command so that we can evaluate the literal $CMD
-	EVAL_COMMAND=$(eval echo "$CHEATBUFFER_COMMAND")
-
-	# Only check the word that the cursor is on (the cheat buffer command can be more than one word)
-	if ! type "$CMD" > /dev/null ; then
-		zle -M "Could not validate '$CMD' with 'type $CMD'"
+	if [ -z "$CMD" ]; then
+		zle -M "Could not find any help command in '$BUFFER'"
 		return 2
 	fi
 
-	PAGE=$(eval "$EVAL_COMMAND" | col -b | head -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
+	# eval the cheatbuffer command so that we can evaluate the literal $CMD
+	local EVAL_COMMAND=$(eval echo "$CMD -h")
+
+	# # Only check the word that the cursor is on (the cheat buffer command can be more than one word)
+	# if ! type "$CMD" > /dev/null ; then
+	# 	zle -M "Could not validate '$CMD' with 'type $CMD'"
+	# 	return 2
+	# fi
+
+	local PAGE=$(eval "$EVAL_COMMAND" | col -b | head -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
 	if [[ $? != 0 ]] ; then
 		zle -M "Could not run command 'eval \"$EVAL_COMMAND\" | col -b | head -n \"$CHEATBUFFER_MAX_LINES\"' or no help page found for command '$CMD'"
 		return 3
 	fi
 
-	PAGE_LINES=$(echo "$PAGE" | wc -l)
+	local PAGE_LINES=$(echo "$PAGE" | wc -l)
 	if [[ "$PAGE_LINES" -ge "$CHEATBUFFER_MAX_LINES" ]] ; then
 		PAGE=$(printf "$PAGE\n...")
 	fi
