@@ -9,36 +9,25 @@ export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
 cheatbuffer() {
 	set -o pipefail
 
-	local WORD_ARRAY=($=BUFFER)
+	declare -a cheat_functions=( _cheatbuffer_cheat _cheatbuffer_help )
+	# declare -a cheat_functions=( _cheatbuffer_help _cheatbuffer_cheat )
 
-	# get the longest substring that has help
-	local CURRENT_COMMAND=''
-	for i in $(seq `echo ${#WORD_ARRAY[@]}`); do
-		CURRENT_COMMAND=${WORD_ARRAY[@]:0:$i}
-		if ! eval "$CURRENT_COMMAND -h" > /dev/null 2>&1; then
+	for f in ${cheat_functions[@]}; do
+		OUTPUT=$(eval "$f '$BUFFER' '$LBUFFER' '$RBUFFER'")
+		if ! [ -z "$OUTPUT" ]; then
 			break
 		fi
-		local CMD="$CURRENT_COMMAND"
 	done
 
-	if [ -z "$CMD" ]; then
-		zle -M "Could not find any help command in '$BUFFER'"
-		return 2
+	if [ -z "$OUTPUT" ]; then
+		zle -M "Couldn't find any help"
+		return 1
 	fi
 
-	# eval the cheatbuffer command so that we can evaluate the literal $CMD
-	local EVAL_COMMAND=$(eval echo "$CMD -h")
-
-	# # Only check the word that the cursor is on (the cheat buffer command can be more than one word)
-	# if ! type "$CMD" > /dev/null ; then
-	# 	zle -M "Could not validate '$CMD' with 'type $CMD'"
-	# 	return 2
-	# fi
-
-	local PAGE=$(eval "$EVAL_COMMAND" | col -b | head -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
+	local PAGE=$(echo "$OUTPUT" | head -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
 	if [[ $? != 0 ]] ; then
-		zle -M "Could not run command 'eval \"$EVAL_COMMAND\" | col -b | head -n \"$CHEATBUFFER_MAX_LINES\"' or no help page found for command '$CMD'"
-		return 3
+		zle -M "Could not get head data from output"
+		return 2
 	fi
 
 	local PAGE_LINES=$(echo "$PAGE" | wc -l)
@@ -73,14 +62,16 @@ _cheatbuffer_help() {
 	local BUFFER="$1"
 
 	local WORD_ARRAY=($=BUFFER)
-
 	# get the longest substring that has help
 	local CURRENT_COMMAND=''
 	local FINAL_OUTPUT=''
 	for i in $(seq `echo ${#WORD_ARRAY[@]}`); do
 		# get a substring from 0 to the "i"th word
 		CURRENT_COMMAND=${WORD_ARRAY[@]:0:$i}
-		local OUTPUT=$(eval "$CURRENT_COMMAND --help") 2> /dev/null
+
+		# Some things (like "man") output their help on stderr
+		# so redirect stderr to stdout and then check the output
+		local OUTPUT=$(eval "$CURRENT_COMMAND --help") 2>&1
 		if [ -z "$OUTPUT" ]; then
 			break
 		fi
@@ -98,7 +89,7 @@ _cheatbuffer_cheat() {
 
 	# Not sure what the best way to express that cheat is not installed
 	# Right now this will just exit silently and go onto the next function
-	if ! type cheat; then
+	if ! type cheat &> /dev/null ; then
 		return 0
 	fi
 
