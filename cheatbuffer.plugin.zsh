@@ -50,5 +50,46 @@ cheatbuffer() {
 	zle -M "$PAGE"
 }
 
+###
+### Methods
+###
+# These are the different functions that are available for cheatbuffer to use to provide help
+# functions should take in the full command (buffer) and output help.
+# If no help is output, then cheatbuffer should try the next function
+# https://stackoverflow.com/questions/20361398/bash-array-of-functions
+
+# Tries to display "$CMD --help"
+# Note this can also deal with subcommands too
+# e.g. "nova --help" and "nova list --help"
+#
+# This function tries to get help starting with the first argument
+# and tries the next argument until it can't get anymore help
+_cheatbuffer_help() {
+	local FULL_COMMAND="$1"
+
+	local WORD_ARRAY=($=FULL_COMMAND)
+
+	# get the longest substring that has help
+	local CURRENT_COMMAND=''
+	local FINAL_OUTPUT=''
+	for i in $(seq `echo ${#WORD_ARRAY[@]}`); do
+		CURRENT_COMMAND=${WORD_ARRAY[@]:0:$i}
+		local OUTPUT=$(eval "$CURRENT_COMMAND --help") 2> /dev/null
+		if [ -z "$OUTPUT" ]; then
+			break
+		fi
+		FINAL_OUTPUT="$OUTPUT"
+	done
+	echo "$FINAL_OUTPUT"
+}
+
+_cheatbuffer_cheat() {
+
+}
+
+_cheatbuffer_custom() {
+
+}
+
 bindkey $CHEATBUFFER_KEY_SEQ cheatbuffer
 zle -N cheatbuffer
