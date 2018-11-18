@@ -71,7 +71,10 @@ _cheatbuffer_help() {
 
 		# Some things (like "man") output their help on stderr
 		# so redirect stderr to stdout and then check the output
-		local OUTPUT=$(eval "$CURRENT_COMMAND --help") 2>&1
+		local OUTPUT=$(eval "$CURRENT_COMMAND --help") 2> /tmp/.cheatbuffer_help_stderr
+		if [ -z "$OUTPUT" ]; then
+			OUTPUT=$(cat /tmp/.cheatbuffer_help_stderr)
+		fi
 		if [ -z "$OUTPUT" ]; then
 			break
 		fi
