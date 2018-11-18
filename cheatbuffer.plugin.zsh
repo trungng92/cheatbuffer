@@ -5,12 +5,12 @@
 export CHEATBUFFER_MAX_LINES="${CHEATBUFFER_MAX_LINES:-40}"
 # key bind to activate cheatbuffer, defaults to ctrl + h
 export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
+export CHEATBUFFER_FUNC_ORDER="${CHEATBUFFER_FUNC_ORDER:-_cheatbuffer_help _cheatbuffer_cheat}"
 
 cheatbuffer() {
 	set -o pipefail
 
-	declare -a cheat_functions=( _cheatbuffer_cheat _cheatbuffer_help )
-	# declare -a cheat_functions=( _cheatbuffer_help _cheatbuffer_cheat )
+	local cheat_functions=($=CHEATBUFFER_FUNC_ORDER)
 
 	for f in ${cheat_functions[@]}; do
 		OUTPUT=$(eval "$f '$BUFFER' '$LBUFFER' '$RBUFFER'")
@@ -65,7 +65,7 @@ _cheatbuffer_help() {
 	# get the longest substring that has help
 	local CURRENT_COMMAND=''
 	local FINAL_OUTPUT=''
-	for i in $(seq `echo ${#WORD_ARRAY[@]}`); do
+	for ((i=1; i<= ${#WORD_ARRAY[@]}; i++ )); do
 		# get a substring from 0 to the "i"th word
 		CURRENT_COMMAND=${WORD_ARRAY[@]:0:$i}
 
