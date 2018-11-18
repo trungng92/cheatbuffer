@@ -2,7 +2,7 @@
 
 ## Defaults
 # maximum buffer lines to show
-export CHEATBUFFER_MAX_LINES="${CHEATBUFFER_MAX_LINES:-40}"
+export CHEATBUFFER_MAX_LINES="${CHEATBUFFER_MAX_LINES:-30}"
 # key bind to activate cheatbuffer, defaults to ctrl + h
 export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
 export CHEATBUFFER_FUNC_ORDER="${CHEATBUFFER_FUNC_ORDER:-_cheatbuffer_help _cheatbuffer_cheat}"

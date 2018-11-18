@@ -40,7 +40,7 @@ The current list of environment variables are:
 
 ```bash
 # maximum buffer lines to show
-export CHEATBUFFER_MAX_LINES=20
+export CHEATBUFFER_MAX_LINES=30
 # These are the functions that will be called when you try to run cheatbuffer
 # by default we call _cheatbuffer_help _cheatbuffer_cheat (which are defined in the cheatbuffer plugin).
 # However, you also have the option of adding your own custom functions
