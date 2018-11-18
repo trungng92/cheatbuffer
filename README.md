@@ -7,7 +7,7 @@ When you activate `cheatbuffer` (`ctrl + h` by default), it will display help te
 1. displaying the help in the `minibuffer`.
 
 ![cheatbuffer demo](cheatbuffer-demo.gif)
-[asciinema link](https://asciinema.org/a/Jd49MdRPhu7YFPF89sAsJStZE)
+[asciinema link](https://asciinema.org/a/qNF7bKdwHtoFmhiu3X6OYbR37)
 
 # Installation
 
