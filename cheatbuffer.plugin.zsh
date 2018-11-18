@@ -24,7 +24,7 @@ cheatbuffer() {
 		return 1
 	fi
 
-	local PAGE=$(echo "$OUTPUT" | head -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
+	local PAGE=$(echo "$OUTPUT" | col -bx | head -n "$CHEATBUFFER_MAX_LINES") 2> /dev/null
 	if [[ $? != 0 ]] ; then
 		zle -M "Could not get head data from output"
 		return 2
