@@ -49,12 +49,12 @@ export CHEATBUFFER_FUNC_ORDER='_cheatbuffer_help _cheatbuffer_cheat'
 export CHEATBUFFER_KEY_SEQ='^h'
 ```
 
-# Example: Modifying cheat command to `man`
+# Example: Modifying cheatbuffer to use `man`
 
 You can run these lines to make the minibuffer to show the `man` page:
 
 ```
-# run these
+# for docs on how to write a custom function, look inside cheatbuffer.plugin.zsh
 man_example() {
     local BUFFER="$1"
     # man prints the help text to stderr
