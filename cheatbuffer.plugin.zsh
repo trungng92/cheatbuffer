@@ -106,8 +106,7 @@ _cheatbuffer_help() {
 
 		# Some things (like "man") output their help on stderr
 		# so redirect stderr to stdout and then check the output
-		# We also run --help --help in to deal with the case where the '--help' may have been the argument to a flag
-		local OUTPUT=$(eval "$CURRENT_COMMAND --help --help") 2> /tmp/.cheatbuffer_help_stderr
+		local OUTPUT=$(eval "$CURRENT_COMMAND --help") 2> /tmp/.cheatbuffer_help_stderr
 		if [ -z "$OUTPUT" ]; then
 			OUTPUT=$(cat /tmp/.cheatbuffer_help_stderr)
 		fi
