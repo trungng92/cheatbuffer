@@ -7,17 +7,19 @@ export CHEATBUFFER_MAX_LINES="${CHEATBUFFER_MAX_LINES:-30}"
 export CHEATBUFFER_KEY_SEQ="${CHEATBUFFER_KEY_SEQ:-^h}"
 export CHEATBUFFER_FUNC_ORDER="${CHEATBUFFER_FUNC_ORDER:-_cheatbuffer_help _cheatbuffer_cheat}"
 
+DEBUG_FILE="$HOME/.oh-my-zsh/custom/plugins/cheatbuffer/debug.log"
+
 cheatbuffer() {
 	set -o pipefail
 
 	local cheat_functions=($=CHEATBUFFER_FUNC_ORDER)
+	echo "available cheat functions $cheat_functions" >> "$DEBUG_FILE"
 
-	for f in ${cheat_functions[@]}; do
-		OUTPUT=$(eval "$f '$BUFFER' '$LBUFFER' '$RBUFFER'")
-		if ! [ -z "$OUTPUT" ]; then
-			break
-		fi
-	done
+	INDEX=$(_next_help_index "$BUFFER")
+	echo "cheat function index is $INDEX" >> "$DEBUG_FILE"
+
+	OUTPUT=$(eval "$cheat_functions[$INDEX] '$BUFFER' '$LBUFFER' '$RBUFFER'")
+	echo "ran $cheat_functions[$INDEX] buffer: '$BUFFER' lbuffer: '$LBUFFER' rbuffer: '$RBUFFER'" >> "$DEBUG_FILE"
 
 	if [ -z "$OUTPUT" ]; then
 		zle -M "Couldn't find any help"
@@ -37,6 +39,39 @@ cheatbuffer() {
 
 	# Print out the man page into the minibuffer
 	zle -M "$PAGE"
+}
+
+# Stores the current help information
+# This help information is used to keep track of the current command and help type
+# so that we know which help type to display next
+_store_current_help() {
+	local CURRENT_HELP_COMMAND="$1"
+	local CURRENT_HELP_TYPE="$2"
+	local HELP_STATE_FILE="$HOME/.oh-my-zsh/custom/plugins/cheatbuffer/.tmp_state"
+	cat << EOF > "$HELP_STATE_FILE"
+# File used to track state of current help
+LAST_RAN_COMMAND='$CURRENT_HELP_COMMAND'
+CURRENT_HELP_TYPE='$CURRENT_HELP_TYPE'
+EOF
+}
+
+# Next help index to display to the user
+# We cycle through lots of different help functions, and this keeps track of which index we're on
+_next_help_index() {
+	local CURRENT_HELP_COMMAND="$1"
+	local HELP_STATE_FILE="$HOME/.oh-my-zsh/custom/plugins/cheatbuffer/.tmp_state"
+	source "$HELP_STATE_FILE" &> "$DEBUG_FILE"
+
+	# echo "# current help type from file $CURRENT_HELP_TYPE" >> "${HELP_STATE_FILE}_1"
+	if [ "$LAST_RAN_COMMAND" != "$CURRENT_HELP_COMMAND" ]; then
+		CURRENT_HELP_TYPE=0
+	else
+		local cheat_functions=($=CHEATBUFFER_FUNC_ORDER)
+		CURRENT_HELP_TYPE="$(( ($CURRENT_HELP_TYPE + 1) % $#cheat_functions ))"
+	fi
+	_store_current_help "$CURRENT_HELP_COMMAND" "$CURRENT_HELP_TYPE"
+	# zsh indexes actually start at 1, so we need to add 1 at the very end
+	echo "$((CURRENT_HELP_TYPE + 1))"
 }
 
 ###
